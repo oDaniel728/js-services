@@ -243,7 +243,7 @@ export function extract(union_, types_) {
 }
 
 /**
- * Description placeholder
+ * Pega os parametros de uma função (hint)
  *
  * @template {(...args: any) => any} T
  * @param {T} func
@@ -256,7 +256,7 @@ export function parameters(func) {
 
 
 /**
- * Creates a new object
+ * Cria um objeto(pq sim)
  *
  * @template {Record<string, any>} T
  * @param {T} object
@@ -264,4 +264,17 @@ export function parameters(func) {
  */
 export function object(object) {
     return /** @type {T} */(object);
+}
+
+
+/**
+ * Força o tipo(hint)
+ *
+ * @template {any} T
+ * @param {T} Type 
+ * @param {any} object 
+ * @returns {T}
+ */
+export function cast(Type, object) {
+    return object
 }
