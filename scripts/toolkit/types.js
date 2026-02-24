@@ -9,7 +9,7 @@ export const string = /** @type {string} */ ("");
 
 export const number = /** @type {number} */ (0);
 
-export const boolean = /** @type {boolean} */ (true);
+export const boolean = /** @type {boolean} */ (false);
 
 export const null_ = /** @type {null} */ (null);
 
@@ -18,6 +18,24 @@ export const any = union([string, number, boolean, null_, Object, Array]);
 export const void_ = /** @type {void} */ (undefined);
 
 export const voidCallable = () => void_;
+
+export const Enum = {
+    baseTypes: {
+        string: "string",
+        number: "number",
+        boolean: "boolean",
+        null: "null",
+        void: "void",
+        undefined: "undefined",
+        any: "any",
+
+        array: "array",
+        object: "object"
+    }
+};
+/**
+ * @typedef {keyof typeof Enum.baseTypes} baseTypes
+ */
 
 /**
  * Cria um tipo lista
@@ -277,4 +295,74 @@ export function object(object) {
  */
 export function cast(Type, object) {
     return object
+}
+
+/**
+ * Cria um struct com os valores padrão
+ *
+ * @template {Record<string, any>} T
+ * @param { T } structure - objeto que define os tipos de cada propriedade
+ * @param { Record<keyof typeof Enum.baseTypes, any> } map - mapeamento de tipos para valores padrão
+ * @returns { T } - objeto preenchido com valores padrão
+ */
+export function createDefault(structure, map) {
+    /** @type {Record<string, any>} */
+    const out = {};
+
+    for (const key in structure) {
+        const type = structure[key];
+        let value;
+
+        // Verifica se é array
+        if (Array.isArray(type)) {
+            value = map.array ?? [];
+        }
+        // Verifica se é objeto (não array e não null)
+        else if (type !== null && typeof type === "object") {
+            value = map.object ?? {};
+        }
+        // Caso seja tipo primitivo
+        else {
+            switch (type) {
+                case string:
+                    value = map.string ?? "";
+                    break;
+                case number:
+                    value = map.number ?? 0;
+                    break;
+                case boolean:
+                    value = map.boolean ?? true;
+                    break;
+                case null_:
+                    value = map.null ?? null;
+                    break;
+                case any:
+                    value = map.any ?? 0;
+                    break;
+                case void_:
+                case undefined:
+                    value = map.void ?? undefined;
+                    break;
+                default:
+                    value = undefined;
+                    break;
+            }
+        }
+
+        out[key] = value;
+    }
+
+    return /** @type {T} */ (out);
+}
+
+
+/**
+ * Retorna o value como função pra ser usado como gerador
+ *
+ * @template T
+ * @param {T} value 
+ * @returns {() => T} 
+ */
+export function generator(value) {
+    return () => value;
 }
