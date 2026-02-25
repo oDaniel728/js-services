@@ -15,6 +15,17 @@
  * @typedef {T | Iterable<T>} OneOrMany
  */
 
+/**
+ * @typedef {{
+ *     keyframes: Keyframe[] | PropertyIndexedKeyframes,
+ *     options?: number | KeyframeAnimationOptions
+ * }} WebAnimationObject
+ */
+
+/**
+ * @typedef {CSSStyleSheet} CSS
+ */
+
 export const Element = {
     /**
      * @template {keyof HTMLElementTagNameMap} K
@@ -255,4 +266,224 @@ export const Element = {
             fn(/** @type {T} */ (target));
         }
     },
+    /**
+     * Executa animação CSS (por nome) ou Web Animations API.
+     *
+     * - string → nome da animação já existente no CSS
+     * - objeto → usa Web Animations API
+     *
+     * @param {HTMLElement} element
+     * @param {string | WebAnimationObject} animation
+     * @returns {Animation | void}
+     */
+    animate(element, animation) {
+        // 🔹 CSS Animation por nome
+        if (typeof animation === "string") {
+            // remove animação anterior
+            element.style.animation = "none";
+            // força reflow para reiniciar
+            void element.offsetWidth;
+
+            element.style.animation = animation;
+            return;
+        }
+
+        // 🔹 Web Animations API
+        const { keyframes, options } = animation;
+
+        return element.animate(
+            keyframes,
+            options ?? { duration: 300, easing: "ease", fill: "forwards" }
+        );
+    }
+};
+
+export const Document = {
+    /**
+     * Define o título do documento.
+     *
+     * @param {string} title
+     * @returns {void}
+     */
+    setTitle(title) {
+        document.title = title;
+    },
+
+    /**
+     * Define ou substitui o favicon da página.
+     *
+     * @param {string} icon - URL do ícone (.ico, .png, .svg, etc.)
+     * @returns {void}
+     */
+    setIcon(icon) {
+        /** @type {HTMLLinkElement | null} */
+        let link = document.querySelector("link[rel~='icon']");
+
+        if (!link) {
+            link = document.createElement("link");
+            link.rel = "icon";
+            document.head.appendChild(link);
+        }
+
+        link.href = icon;
+    },
+
+    /**
+     * Redireciona para outra URL.
+     *
+     * @param {string} href
+     * @returns {void}
+     */
+    sendTo(href) {
+        window.location.href = href;
+    },
+
+    /**
+     * Exibe alerta do navegador.
+     *
+     * @param {string} message
+     * @returns {void}
+     */
+    windowAlert(message) {
+        window.alert(message);
+    },
+
+    /**
+     * Exibe prompt do navegador.
+     *
+     * @param {string} message
+     * @returns {string | null}
+     */
+    windowPrompt(message) {
+        return window.prompt(message);
+    },
+    /**
+     * Exibe diálogo OK / Cancelar.
+     *
+     * @param {string} message
+     * @returns {boolean} true = OK, false = Cancelar
+     */
+    windowConfirm(message) {
+        return window.confirm(message);
+    },
+
+    /**
+     * Adiciona um <link rel="stylesheet"> no <head>.
+     *
+     * O arquivo final será:
+     *      styles/{filename}.css
+     *
+     * @param {string} filename
+     * @returns {HTMLLinkElement}
+     */
+    addLinkStyleSheet(filename) {
+        const href = `styles/${filename}.css`;
+
+        /** @type {HTMLLinkElement | null} */
+        const existing = document.querySelector(
+            `link[rel="stylesheet"][href="${href}"]`
+        );
+
+        if (existing) return existing;
+
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = href;
+
+        document.head.appendChild(link);
+        return link;
+    },
+
+    /**
+     * Remove um <link rel="stylesheet">.
+     *
+     * Pode receber:
+     *  - Nome do arquivo (sem ".css" e sem "styles/")
+     *  - O próprio HTMLLinkElement
+     *
+     * @param {string | HTMLLinkElement} filename
+     * @returns {boolean} true se removeu, false se não encontrou
+     */
+    removeLinkStyleSheet(filename) {
+        /** @type {HTMLLinkElement | null} */
+        let link = null;
+
+        if (typeof filename === "string") {
+            const href = `styles/${filename}.css`;
+
+            link = document.querySelector(
+                `link[rel="stylesheet"][href="${href}"]`
+            );
+        } else {
+            link = filename;
+        }
+
+        if (link && link.parentNode) {
+            link.parentNode.removeChild(link);
+            return true;
+        }
+
+        return false;
+    },
+
+    /**
+     * Carrega CSS dinamicamente via <style>.
+     *
+     * - name é usado como identificador único (data-style)
+     * - content pode ser string CSS ou CSSStyleSheet (adoptedStyleSheets)
+     *
+     * @param {string} name
+     * @param {string | CSS} content
+     * @returns {HTMLStyleElement | CSSStyleSheet}
+     */
+    loadCSS(name, content) {
+        // remove anterior se existir
+        this.unloadCSS(name);
+
+        // 🔹 Caso seja CSSStyleSheet (moderno)
+        if (content instanceof CSSStyleSheet) {
+            /** @type {CSSStyleSheet[]} */
+            const sheets = /** @type {any} */ (document.adoptedStyleSheets);
+
+            document.adoptedStyleSheets = [...sheets, content];
+            return content;
+        }
+
+        // 🔹 Caso seja string CSS
+        const style = document.createElement("style");
+        style.setAttribute("data-style", name);
+        style.textContent = content;
+
+        document.head.appendChild(style);
+        return style;
+    },
+
+    /**
+     * Remove CSS carregado dinamicamente.
+     *
+     * @param {string} name
+     * @returns {boolean}
+     */
+    unloadCSS(name) {
+        const style = document.querySelector(`style[data-style="${name}"]`);
+        if (style) {
+            style.remove();
+            return true;
+        }
+
+        /** @type {CSSStyleSheet[]} */
+        const sheets = /** @type {any} */ (document.adoptedStyleSheets);
+
+        const filtered = sheets.filter((sheet) => {
+            // @ts-ignore
+            return sheet.__name !== name;
+        });
+
+        if (filtered.length !== sheets.length) {
+            document.adoptedStyleSheets = filtered;
+            return true;
+        }
+
+        return false;
+    }
 };
