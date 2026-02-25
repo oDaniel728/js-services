@@ -1,0 +1,24 @@
+{
+    "Gets a tool": {
+        "prefix": ".tk-toolget",
+        "body": "import * as ${1:name} from \"./toolkit/${1:name}.js\";",
+        "scope": "javascript"
+    },
+
+    "Get services": {
+        "prefix": ".tk-services",
+        "body": "import * as services from \"./toolkit/services.js\";",
+        "scope": "javascript"
+    },
+    "Get service": {
+        "prefix": ".tk-load-service",
+        "body": "const ${1:nome} = services.${1:nome};",
+        "scope": "javascript"
+    },
+
+    "Get typings": {
+        "prefix": ".tk-typing",
+        "body": "import * as typing from \"./toolkit/typing.js\";",
+        "scope": "javascript"
+    }
+}
