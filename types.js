@@ -285,13 +285,14 @@ export function object(object) {
 }
 
 
+
 /**
  * Força o tipo(hint)
  *
- * @template {any} T
- * @param {T} Type 
- * @param {any} object 
- * @returns {T}
+ * @template { any } T
+ * @param { new(...args: any[]) => T | T } Type 
+ * @param { any } object 
+ * @returns { T }
  */
 export function cast(Type, object) {
     return object
