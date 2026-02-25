@@ -120,8 +120,8 @@ export const UnitService = {
  */
 
 export const LocalStorageService = {
-    /** @type {LocalStorage<string, Record<string, any>>[]} */
-    localStorages: [],
+    /** @type {Array<LocalStorage<string, Record<string, any>>>} */
+    localStorages: new Array(),
 
     /**
      * Cria um novo local Storage
@@ -215,3 +215,6 @@ export const LocalStorageService = {
         return this.localStorages.find(s => s.name === name);
     }
 };
+
+import * as hs from "./submodules/HtmlService.js";
+export const HtmlService = hs;
