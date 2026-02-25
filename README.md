@@ -1,2 +1,3 @@
 # js-services
-reusing later lol
+Ferramentas pra ajudar a desenvolver sites.  
+pode usar se quiser sla.
