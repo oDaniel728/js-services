@@ -2,7 +2,11 @@
 
 /**
  * @template T 
- * @typedef {T[keyof T]} ValueOf
+ * @typedef { T[keyof T] } ValueOf
+ */
+/**
+ * @template T
+ * @typedef { new(...args: any[]) => T } ClassOf
  */
 
 export const string = /** @type {string} */ ("");
@@ -366,4 +370,17 @@ export function createDefault(structure, map) {
  */
 export function generator(value) {
     return () => value;
+}
+
+
+/**
+ * Retorna nulo, mas um dia é cls
+ *
+ * @template T
+ * @param {ClassOf<T>} cls 
+ * @returns { T }
+ */
+export function nullbut(cls) {
+    // @ts-ignore
+    return null;
 }
