@@ -100,59 +100,77 @@ export const UnitService = {
 
 /**
  * @template {string} T
- * @template {Record<string, any>} U
+ * @template {{}} U
  * @typedef {Object} LocalStorage
  * @property {T} name
  * @property {U} data
  * 
- * @property {<K extends string, V>(key: K, value: V) => void} setItem
- * @property {<K extends keyof U, W>(key: K, defaultValue: W) => W} getItem
- * @property {<K extends keyof U>(key: K) => void} removeItem
+ * @property {(key: keyof U, value: U[keyof U]) => void} setItem
+ * @property {(key: keyof U) => U[keyof U] | undefined} getItem
+ * @property {(key: keyof U) => void} removeItem
+ * 
+ * @property {() => void} save
+ * @property {() => void} load
  * 
  * @property {() => U} getAll
- * @property {<V extends Record<string, any>>(values: V) => void} setAll
+ * @property {(values: Partial<U>) => void} setAll
  * @property {() => void} removeAll
- * 
- * @property {<K extends keyof U>(key: K) => boolean} hasKey
+ * @property {(key: keyof U) => boolean} hasKey
  * @property {() => number} size
- * 
- * @property {<K extends keyof U>(cb: (key: K, value: U[K], index: number, storage: U) => void) => void} forEach
  */
 
 export const LocalStorageService = {
-    /** @type {Array<LocalStorage<string, Record<string, any>>>} */
-    localStorages: new Array(),
+
+    /** @type {Map<string, LocalStorage<string, any>>} */
+    localStorages: new Map(),
 
     /**
-     * Cria um novo local Storage
      * @template {string} T
-     * @template {Record<string, any>} U
-     * @param {T} name 
-     * @param {U} [defaultValue={}]
+     * @template {{}} U
+     * @param {T} name
+     * @param {U} defaultValue
      * @returns {LocalStorage<T, U>}
      */
-    // @ts-ignore
-    new(name, defaultValue={}) {
-        /** @type {LocalStorage<T, any>} */
+    new(name, defaultValue) {
+
+        if (this.localStorages.has(name)) {
+            // @ts-ignore
+            return this.localStorages.get(name);
+        }
+
+        /** @type {LocalStorage<T, U>} */
         const storage = {
+
             name,
-            data: defaultValue,
+            data: { ...defaultValue },
 
             setItem(key, value) {
                 this.data[key] = value;
-                localStorage.setItem(`${this.name}:${key}`, JSON.stringify(value));
             },
 
-            getItem(key, defaultValue) {
-                if (this.data[key] !== undefined) return this.data[key];
-                const value = localStorage.getItem(`${this.name}:${String(key)}`);
-                if (value !== null) return JSON.parse(value);
-                return defaultValue;
+            getItem(key) {
+                return this.data[key];
             },
 
             removeItem(key) {
                 delete this.data[key];
-                localStorage.removeItem(`${this.name}:${String(key)}`);
+            },
+
+            save() {
+                localStorage.setItem(this.name, JSON.stringify(this.data));
+            },
+
+            load() {
+                const raw = localStorage.getItem(this.name);
+                if (!raw) return;
+
+                try {
+                    /** @type {U} */
+                    const parsed = JSON.parse(raw);
+                    this.data = parsed;
+                } catch {
+                    this.data = { ...defaultValue };
+                }
             },
 
             getAll() {
@@ -161,16 +179,11 @@ export const LocalStorageService = {
 
             setAll(values) {
                 Object.assign(this.data, values);
-                for (const key in values) {
-                    localStorage.setItem(`${this.name}:${key}`, JSON.stringify(values[key]));
-                }
             },
 
             removeAll() {
-                for (const key in this.data) {
-                    localStorage.removeItem(`${this.name}:${key}`);
-                }
                 this.data = {};
+                localStorage.removeItem(this.name);
             },
 
             hasKey(key) {
@@ -179,40 +192,35 @@ export const LocalStorageService = {
 
             size() {
                 return Object.keys(this.data).length;
-            },
-
-            forEach(cb) {
-                // @ts-ignore
-                Object.entries(this.data).forEach(([key, value], i) => cb(key.toString(), value, i, this.data));
             }
         };
 
-        if (!this.localStorages.includes(storage)) {
-            this.localStorages.push(storage);
-        }
-
+        this.localStorages.set(name, storage);
         return storage;
     },
 
     /**
-     * Deleta um local Storage pelo nome
-     * @param {string} name
+     * Obtém um storage existente
+     * @template {string} T
+     * @template {{}} U
+     * @param {T} name
+     * @returns {LocalStorage<T, U> | undefined}
      */
-    delete(name) {
-        const index = this.localStorages.findIndex(s => s.name === name);
-        if (index !== -1) {
-            this.localStorages[index].removeAll(); // limpa os itens do localStorage real
-            this.localStorages.splice(index, 1);
-        }
+    get(name) {
+        // @ts-ignore
+        return this.localStorages.get(name);
     },
 
     /**
-     * Obtém um local Storage existente pelo nome
-     * @param {string} name 
-     * @returns {LocalStorage<string, Record<string, any>> | undefined}
+     * Remove completamente um storage
+     * @param {string} name
      */
-    get(name) {
-        return this.localStorages.find(s => s.name === name);
+    delete(name) {
+        const storage = this.localStorages.get(name);
+        if (!storage) return;
+
+        storage.removeAll();
+        this.localStorages.delete(name);
     }
 };
 
