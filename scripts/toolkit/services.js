@@ -9,6 +9,8 @@
 
 /**
  * Manage cookies
+ * @version 26.02.23
+ * @since 26.02.23
  *  */
 export const CookieService = {
     setCookie: /**
@@ -60,6 +62,10 @@ let _Units = [
     { value: 1e21, suffix: 'Sx' },
 ]
 
+/**
+ * @version 26.02.23
+ * @since 26.02.23
+ */
 export const UnitService = {
     Unit: {
         new: /**
@@ -121,8 +127,10 @@ export const UnitService = {
  * @property {() => void} hook
  * @property {(key: keyof U, cb: (value: U[keyof U]) => U[keyof U]?) => void} evaluateKey
  * @property {boolean} hooked
+ * 
+ * @version 26.02.26
+ * @since 26.02.23
  */
-
 export const LocalStorageService = {
 
     /** @type {Map<string, LocalStorage<string, any>>} */
@@ -161,10 +169,16 @@ export const LocalStorageService = {
                 delete this.data[key];
             },
 
+            /**
+             * @since 26.02.25
+             */
             save() {
                 localStorage.setItem(this.name, JSON.stringify(this.data));
             },
 
+            /**
+             * @since 26.02.25
+             */
             load() {
                 const raw = localStorage.getItem(this.name);
                 if (!raw) return;
@@ -200,6 +214,9 @@ export const LocalStorageService = {
                 return Object.keys(this.data).length;
             },
 
+            /**
+             * @since 26.02.26
+             */
             hook() {
                 if (this.hooked) return
                 this.hooked = true;
@@ -211,6 +228,9 @@ export const LocalStorageService = {
                 })
             },
 
+            /**
+             * @since 26.02.26
+             */
             evaluateKey(key, cb) {
                 this.data[key] = (cb(this.data[key]) ?? this.data[key])
             },
