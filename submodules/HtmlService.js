@@ -25,6 +25,10 @@
 /**
  * @typedef {CSSStyleSheet} CSS
  */
+/**
+ * @typedef { Omit<typeof Console, "new"> } Console
+ */
+/** @typedef { { log: (a: string) => void, warn: (a: string) => void, error: (a: string) => void } } Logger */
 
 export const Element = {
     /**
@@ -485,5 +489,111 @@ export const Document = {
         }
 
         return false;
+    },
+    
+    /**
+     * @template {keyof HTMLElementTagNameMap | HTMLElement} T
+     * @param {string} code
+     * @param {T} as
+     * @param {HTMLElement} where
+     * @returns {T extends keyof HTMLElementTagNameMap
+     *     ? HTMLElementTagNameMap[T]
+     *     : T}
+     */
+    loadHTML(code, as, where) {
+        /** @type {HTMLElement} */
+        let element;
+
+        if (typeof as === "string") {
+            element = document.createElement(as);
+        } else {
+            element = as;
+        }
+
+        element.innerHTML = code;
+        where.appendChild(element);
+
+        // @ts-ignore
+        return element;
     }
 };
+
+export const Console = {
+
+    /**
+     * Cria um console
+     *
+     * @param {HTMLElement | string | "console"} output - saída do Console, pode ser algum elemento HTML, string(query) ou "console" pra ser o console padrão
+     * @param {keyof HTMLElementTagNameMap=} tag
+     * @returns {Console}
+     */
+    new(output, tag="p") {
+
+        /** @type { Logger } */
+        let prompt;
+        const genFromHTML = 
+            /** @param { HTMLElement } parent @returns { Logger } */ 
+            function(parent) {
+                return {
+                    log: (a) => {
+                        const el = Element.new(tag, parent);
+                        el.className = "log";
+                        el.innerText = a;
+                    },
+                    
+                    warn: (a) => {
+                        const el = Element.new(tag, parent);
+                        el.className = "warn";
+                        el.innerText = a;
+                    },
+                    
+                    error: (a) => {
+                        const el = Element.new(tag, parent);
+                        el.className = "error";
+                        el.innerText = a;
+                    },
+                }
+            }
+        if (typeof output === "string") {
+            if (output === "console") {
+                prompt = console
+            } else {
+                prompt = genFromHTML(Element.getByQueryForce(output));
+            }
+        } else {
+            prompt = genFromHTML(output);
+        }
+
+        return {
+            log: function (message)     { prompt.log(message) },
+            warn: function (message) { prompt.warn(message) },
+            error: function (message)  { prompt.error(message) }
+        }
+    },
+    /**
+     * Escreve uma mensagem no terminal
+     *
+     * @param {string} message 
+     */
+    log(message) {
+        console.log(message);
+    },
+
+    /**
+     * Escreve um aviso no terminal
+     *
+     * @param {string} message 
+     */
+    warn(message) {
+        console.warn(message);
+    },
+
+    /**
+     * Escreve um erro no terminal
+     *
+     * @param {string} message 
+     */
+    error(message) {
+        console.error(message);
+    }
+}
