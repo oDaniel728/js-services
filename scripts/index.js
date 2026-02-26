@@ -1,29 +1,22 @@
-
-//   ┌────────────────────────────────────────────────────────────────────────────┐
-//   │ Arquivo de testes eu acho (lmao)                                           │
-//   └────────────────────────────────────────────────────────────────────────────┘
-
 import * as services from "./toolkit/services.js";
-import * as typing from "./toolkit/typing.js";
-
 const HtmlService = services.HtmlService;
-const Element = HtmlService.Element;
-const Document = HtmlService.Document;
+const LocalStorageService = services.LocalStorageService;
 
-const htmlCode = /* html */`<ul id="console"></ul>`;
-Document.loadHTML(htmlCode, 'div', document.body);
 
-const console = HtmlService.Console.new("#console", "li");
-// styles em "/styles/index.css"
+const Session = {
+    notepadContent: ""
+};
+const SessionStorage = LocalStorageService.new("SessionStorage", Session);
 
-console.log("Hello, World!");
+HtmlService.Element.getByQueryForce("textarea#text").addEventListener("input", /** @param { InputEvent & { target: HTMLTextAreaElement } } e */
+function(e) {
+    Session.notepadContent = e.target.value
+});
 
-for (let i = 0; i < 10; i++) {
-    const n = i + 1;
-    if (n % 5 == 0)
-        console.error(n);
-    else if (n % 3 == 0)
-        console.log(n);
-    else
-        console.warn(n);
-}
+window.addEventListener("load", (e) => {
+    SessionStorage.load();
+    HtmlService.Element.getByQueryForce("textarea#text").value = Session.notepadContent;
+})
+window.addEventListener("beforeunload", (e) => {
+    SessionStorage.save();
+})
