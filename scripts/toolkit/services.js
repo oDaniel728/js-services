@@ -142,7 +142,7 @@ export const LocalStorageService = {
         const storage = {
 
             name,
-            data: { ...defaultValue },
+            data: defaultValue,
 
             setItem(key, value) {
                 this.data[key] = value;
@@ -167,14 +167,14 @@ export const LocalStorageService = {
                 try {
                     /** @type {U} */
                     const parsed = JSON.parse(raw);
-                    this.data = parsed;
+                    Object.assign(this.data, parsed);
                 } catch {
-                    this.data = { ...defaultValue };
+                    this.data = defaultValue;
                 }
             },
 
             getAll() {
-                return { ...this.data };
+                return this.data;
             },
 
             setAll(values) {
