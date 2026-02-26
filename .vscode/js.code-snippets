@@ -13,5 +13,16 @@
         "prefix": "#jsdoc",
         "body": "/** $1 */ $0",
         "scope": "javascript"
+    },
+
+    "HTML String": {
+        "prefix": "#html",
+        "body": "/* html */`\n$0\n`;\n",
+        "scope": "javascript"
+    },
+    "CSS String": {
+        "prefix": "#css",
+        "body": "/* css */`\n$0\n`;\n",
+        "scope": "javascript"
     }
 }
