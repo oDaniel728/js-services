@@ -1,5 +1,16 @@
 import * as services from "./toolkit/services.js";
 
+/* 
+# RESUMO DO SCRIPT
+- Carrega serviços(helpers, ajudam a fazer tarefas complicadas)
+- Pega a caixa de texto
+- Cria uma sessão(memória persistente), depois injeta no sistema
+- Quando a janela carregar: muda o valor da caixa de texto pro valor da sessão passada
+- Quando digitar na caixa de texto: muda o valor da sessão
+
+~ Session: { notepadContent: conteúdo do bloco de texto, string }
+*/ 
+
 // Carrega serviços
 const HtmlService = services.HtmlService;
 const LocalStorageService = services.LocalStorageService;
