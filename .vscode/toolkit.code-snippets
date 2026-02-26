@@ -20,5 +20,24 @@
         "prefix": ".tk-typing",
         "body": "import * as typing from \"./toolkit/typing.js\";",
         "scope": "javascript"
+    },
+
+    "Load HtmlService": {
+        "prefix": ".tk-html-service",
+        "body": [
+            "const HtmlService = services.HtmlService;",
+            "const LocalStorageService = services.LocalStorageService;",
+            "const Element = HtmlService.Element;",
+            "const DocProvider = HtmlService.Document;",
+        ],
+        "scope": "javascript"
+    },
+    "Load LocalStorageService": {
+        "prefix": ".tk-local-storage-sevice.create-session",
+        "body": [
+            "const Session = {};",
+            "const SessionStorage = LocalStorageService.new(\"SessionStorage\", Session);",
+        ],
+        "scope": "javascript"
     }
 }
