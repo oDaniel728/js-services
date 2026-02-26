@@ -1,14 +1,13 @@
-
-
-div.shape {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    background-color: red;
+#console .log {
+    color: #383838;
+    font-style: italic;
 }
 
-@keyframes rotate {
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+#console .error {
+    color: rgb(229, 0, 0);
+    font-style: bold;
+}
+
+#console .warn {
+    color: rgb(249, 200, 22);
 }
