@@ -1,3 +1,8 @@
+
+//   ┌────────────────────────────────────────────────────────────────────────────┐
+//   │ Arquivo de testes eu acho (lmao)                                           │
+//   └────────────────────────────────────────────────────────────────────────────┘
+
 import * as services from "./toolkit/services.js";
 import * as typing from "./toolkit/typing.js";
 
