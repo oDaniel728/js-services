@@ -1,3 +1,4 @@
+// @ts-check
 
 /**
  * Unit for abbreviation
@@ -100,7 +101,7 @@ export const UnitService = {
 
 /**
  * @template {string} T
- * @template {{}} U
+ * @template { { } } U
  * @typedef {Object} LocalStorage
  * @property {T} name
  * @property {U} data
@@ -117,6 +118,9 @@ export const UnitService = {
  * @property {() => void} removeAll
  * @property {(key: keyof U) => boolean} hasKey
  * @property {() => number} size
+ * @property {() => void} hook
+ * @property {(key: keyof U, cb: (value: U[keyof U]) => U[keyof U]?) => void} evaluateKey
+ * @property {boolean} hooked
  */
 
 export const LocalStorageService = {
@@ -143,6 +147,7 @@ export const LocalStorageService = {
 
             name,
             data: defaultValue,
+            hooked: false,
 
             setItem(key, value) {
                 this.data[key] = value;
@@ -182,6 +187,7 @@ export const LocalStorageService = {
             },
 
             removeAll() {
+                // @ts-ignore
                 this.data = {};
                 localStorage.removeItem(this.name);
             },
@@ -192,7 +198,22 @@ export const LocalStorageService = {
 
             size() {
                 return Object.keys(this.data).length;
-            }
+            },
+
+            hook() {
+                if (this.hooked) return
+                this.hooked = true;
+                window.addEventListener("load", (e) => {
+                    this.load();
+                })
+                window.addEventListener("beforeunload", (e) => {
+                    this.save();
+                })
+            },
+
+            evaluateKey(key, cb) {
+                this.data[key] = (cb(this.data[key]) ?? this.data[key])
+            },
         };
 
         this.localStorages.set(name, storage);
