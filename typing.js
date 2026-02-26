@@ -297,6 +297,7 @@ export function object(object) {
  * @param { new(...args: any[]) => T | T } Type 
  * @param { any } object 
  * @returns { T }
+ * @since 26.02.23
  */
 export function cast(Type, object) {
     return object
@@ -379,6 +380,7 @@ export function generator(value) {
  * @template T
  * @param {ClassOf<T>} cls 
  * @returns { T }
+ * @since 26.02.24
  */
 export function nullbut(cls) {
     // @ts-ignore

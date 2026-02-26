@@ -1,6 +1,10 @@
 // @ts-check
 
 /**
+ * @since 26.02.24
+ */
+
+/**
  * @template {string} S
  * @typedef { S extends `${infer T}#${string}`
  *      ? T
@@ -499,6 +503,7 @@ export const Document = {
      * @returns {T extends keyof HTMLElementTagNameMap
      *     ? HTMLElementTagNameMap[T]
      *     : T}
+     * @since 26.02.25
      */
     loadHTML(code, as, where) {
         /** @type {HTMLElement} */
@@ -518,6 +523,9 @@ export const Document = {
     }
 };
 
+/**
+ * @since 26.02.25
+ */
 export const Console = {
 
     /**
@@ -595,5 +603,34 @@ export const Console = {
      */
     error(message) {
         console.error(message);
+    }
+}
+
+/** 
+ * @version 26.02.26
+ * @since 26.02.26
+ */ 
+export const File = {
+    /**
+     * Lê conteúdo de um arquivo a partir de:
+     * - uma URL/caminho acessível via fetch
+     * - um objeto File do navegador
+     *
+     * @param {string | File} source
+     * @returns {Promise<string>}
+     */
+    async read(source) {
+        if (typeof source === "string") {
+            const response = await fetch(source);
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            return await response.text();
+        }
+        else {
+            return await source.text();
+        }
     }
 }
