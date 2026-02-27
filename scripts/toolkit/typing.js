@@ -21,8 +21,6 @@ export const any = union([string, number, boolean, null_, Object, Array]);
 
 export const void_ = /** @type {void} */ (undefined);
 
-export const voidCallable = () => void_;
-
 export const Enum = {
     baseTypes: {
         string: "string",
@@ -66,7 +64,7 @@ export function dict(KeyType, ValueType) {
 /**
  * @template T
  * @param {readonly T[]} values
- * @returns {T}
+ * @returns {readonly T}
  */
 export function literal(...values) {
     return values[0];
@@ -242,7 +240,8 @@ export function lock(object) {
 /**
  * Remove os tipos de uma union
  *
- * @template T, U
+ * @template {typeof any} T
+ * @template {T} U
  * @param {T} union_ 
  * @param {U} types_
  * @returns {Exclude<T, U>} 
@@ -254,7 +253,8 @@ export function exclude(union_, types_) {
 /**
  * Remove os tipos de uma union
  *
- * @template T, U
+ * @template {typeof any} T
+ * @template {T} U
  * @param {T} union_ 
  * @param {U} types_
  * @returns {Extract<T, U>} 
