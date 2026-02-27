@@ -83,13 +83,12 @@ import * as typing from "./toolkit/typing.js";
     ```
     > Retorna um valor literal das chaves, o valor deve ser uma das chaves do objeto, nesse caso, o valor deve ser `"nome"` ou `"idade"`.
 
-#### `typing.union(valores)`
+#### `typing.union(...valores)`
 - Cria uma união de um tipo, podendo ser um de seus itens.
     ```js
-    typing.union([typing.string, typing.number])
+    typing.union(typing.string, typing.number)
     // string | number
     ```
-    > `valores` deve ser uma lista;  
     > `string | number` significa que o valor deve ser uma string ou um número.
 
 #### `typing.intersect(objeto1, objeto2): objeto1 + objeto2`
