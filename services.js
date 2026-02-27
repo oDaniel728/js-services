@@ -267,3 +267,25 @@ export const LocalStorageService = {
 
 import * as hs from "./submodules/HtmlService.js";
 export const HtmlService = hs;
+
+import * as fs from "./submodules/FactoryService.js";
+export const FactoryService = fs;
+
+const AllServices = {
+    "CookieService": CookieService,
+    "LocalStorageService": LocalStorageService,
+    "UnitService": UnitService,
+    "HtmlService": HtmlService,
+    "FactoryService": FactoryService,
+}
+
+/**
+ * Pega um serviço
+ *
+ * @template {keyof typeof AllServices} K
+ * @param {K} service 
+ * @returns {(typeof AllServices)[K]}
+ */
+export function GetService(service) {
+    return AllServices[service]
+}
