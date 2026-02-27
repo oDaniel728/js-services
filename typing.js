@@ -95,12 +95,12 @@ export function field(Type, value) {
 
 /**
  * Cria um tipo union a partir de vários tipos/valores
- * @template U
- * @param {readonly U[]} values
- * @returns {U}
+ * @type {import("./tservices").union}
+ * @version 26.02.26.1
  */
-export function union(values) {
-    return values[0];
+export function union(...values) {
+    // @ts-ignore
+    return null;
 }
 
 /**
@@ -117,10 +117,7 @@ export function intersect(self, other) {
 
 /**
  * Cria uma tupla preservando os tipos literais
- *
- * @template {typeof any[]} T
- * @param {T} args
- * @returns {T}
+ * @type {import("./tservices")._tuple}
  */
 export function tuple(...args) {
     // @ts-ignore
@@ -129,17 +126,14 @@ export function tuple(...args) {
 
 
 
+// @ts-check
+
 /**
  * Cria um callable
- *
- * @template {typeof any[]} T
- * @template {typeof any} U
- * @param { T } args
- * @param { U } ret 
- * @returns {(...arg: T) => U} 
+ * @type {import("./tservices")._callable}
  */
 export function callable(args, ret) {
-    return (...args) => ret;
+    return (...args) => ret
 }
 
 /**
@@ -189,12 +183,7 @@ export function type(obj) {
 
 /**
  * Validates a type
- *
- * @template {typeof any | Record<string, any>} T
- * @template {T} U
- * @param {T} Type 
- * @param {U} obj
- * @returns {U}
+ * @type {import("./tservices")._as}
  */
 export function as(Type, obj) {
     return obj
@@ -216,7 +205,7 @@ export function notnull(object) {
 /**
  * Cria um Optional[T]
  *
- * @template { typeof any } T
+ * @template { any } T
  * @param {T} object 
  * @returns {T?} 
  */
