@@ -24,5 +24,11 @@
         "prefix": "#css",
         "body": "/* css */`\n$0\n`;\n",
         "scope": "javascript"
+    },
+
+    "Assert": {
+        "prefix": "assert",
+        "body": "if (!$1) return;\n$0",
+        "scope": "javascript"
     }
 }
