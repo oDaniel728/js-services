@@ -266,17 +266,18 @@ export const LocalStorageService = {
 };
 
 import * as hs from "./submodules/HtmlService.js";
-export const HtmlService = hs;
 
 import * as fs from "./submodules/FactoryService.js";
-export const FactoryService = fs;
+
+import * as es from "./submodules/EventService.js";
 
 const AllServices = {
     "CookieService": CookieService,
     "LocalStorageService": LocalStorageService,
     "UnitService": UnitService,
-    "HtmlService": HtmlService,
-    "FactoryService": FactoryService,
+    "HtmlService": hs,
+    "FactoryService": fs,
+    "EventService": es,
 }
 
 /**
