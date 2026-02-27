@@ -12,7 +12,7 @@
     },
     "Get service": {
         "prefix": ".tk-load-service",
-        "body": "const ${1:nome} = services.${1:nome};",
+        "body": "const ${1:nome} = services.GetService(${1:nome});",
         "scope": "javascript"
     },
 
@@ -38,6 +38,12 @@
             "const Session = {};",
             "const SessionStorage = LocalStorageService.new(\"SessionStorage\", Session);",
         ],
+        "scope": "javascript"
+    },
+
+    "(typing) import from ts": {
+        "prefix": ".tk-ts-import",
+        "body": "@type {import(\"./tservice\").$1}",
         "scope": "javascript"
     }
 }
