@@ -1,0 +1,26 @@
+name: Vincula a branch module com a pasta scripts da branch main.
+
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    sync:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Configure Git
+              run: |
+                  git config user.name "github-actions"
+                  git config user.email "github-actions@github.com"
+
+            - name: Split subtree and push
+              run: |
+                  git subtree split --prefix=scripts -b module-temp
+                  git push -f origin module-temp:module
