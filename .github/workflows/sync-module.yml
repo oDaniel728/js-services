@@ -25,5 +25,5 @@ jobs:
 
             - name: Split subtree and push
               run: |
-                  git subtree split --prefix=scripts -b module-temp
+                  git subtree split --prefix=scripts/toolkit -b module-temp
                   git push -f origin module-temp:module
