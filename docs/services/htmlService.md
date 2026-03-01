@@ -365,3 +365,6 @@ input.addEventListener("change", async () => {
 ```
 
 > Lança um erro HTTP se a requisição via `fetch` falhar.
+
+---
+[FactoryService ▶](./factoryService.md)
