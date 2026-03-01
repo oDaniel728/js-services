@@ -14,13 +14,7 @@
 
 export const Struct = {
 
-    /**
-     * @template {Record<string, any>} T
-     * @template {readonly (keyof T)[]} K
-     * @param {K} keys
-     * @param {T} shape
-     * @returns {StructType<T, K>}
-     */
+    /** @type { import("../tservices").StructGenerator } */
     new(keys, shape) {
         return { keys, shape };
     },
@@ -48,12 +42,7 @@ export const Struct = {
 
 export const Factory = {
 
-    /**
-     * @template {Record<string, any>} T
-     * @template {readonly (keyof T)[]} K
-     * @param {StructType<T, K>} struct
-     * @returns {FactoryType<T, K>}
-     */
+    /** @type { import("../tservices").FactoryGenerator } */
     new(struct) {
 
         const { keys, shape } = struct;
@@ -61,7 +50,6 @@ export const Factory = {
         return {
             new(...args) {
 
-                /** @type {T} */
                 const instance = Object.create(shape);
 
                 keys.forEach((key, index) => {
