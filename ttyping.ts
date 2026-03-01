@@ -9,3 +9,5 @@ export type t_type = <
 >(obj: T) => T;
 
 export type t_any = any;
+
+export type t_object = <T>(object: T) => T;

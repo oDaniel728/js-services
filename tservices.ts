@@ -30,6 +30,11 @@ export type _tuple = <
     const T extends readonly unknown[],
 >(...args: T) => T;
 
+export type StructGenerator = <
+    const T extends Record<string, any>,
+    const K extends readonly (keyof T)[]
+>(keys: K, shape: T) => StructType<T, K>;
+
 export type StructType<
     T,
     K extends readonly (keyof T)[]
@@ -51,16 +56,16 @@ export type MergeStruct<
             : never
         : never
 
+export type FactoryGenerator = <
+    const T extends Record<string, any>,
+    const K extends readonly (keyof T)[]
+>(struct: StructType<T, K>) => FactoryType<T, K>;
+
 export type FactoryType<
     T,
     K extends readonly (keyof T)[]
 > = {
     new: (
-        ...args: {
-            [I in keyof K]:
-                K[I] extends keyof T
-                    ? T[K[I]]
-                    : never
-        }
+        ...args: { [I in keyof K]: K[I] extends keyof T ? T[K[I]] : never }
     ) => T
 }

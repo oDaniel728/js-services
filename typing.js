@@ -272,12 +272,10 @@ export function parameters(func) {
 /**
  * Cria um objeto(pq sim)
  *
- * @template {Record<string, any>} T
- * @param {T} object
- * @returns {T}
+ * @type { import("./ttyping").t_object }
  */
 export function object(object) {
-    return /** @type {T} */(object);
+    return (object);
 }
 
 
