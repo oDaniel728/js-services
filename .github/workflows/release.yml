@@ -1,0 +1,45 @@
+name: Release
+
+on:
+    push:
+        tags:
+            - '*.*.*'
+            - '*.*.*.*'
+
+permissions:
+    contents: write
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set variables
+              run: |
+                  echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+            # ---- ZIP da branch module ----
+            - name: Create module zip
+              run: |
+                  git archive --format=zip origin/module -o module.zip
+
+            # ---- Pegar latest.md da main ----
+            - name: Get latest.md from main
+              run: |
+                  git show origin/main:latest.md > RELEASE.md
+
+            # ---- Criar Release ----
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ github.ref_name }}
+                  name: Release ${{ github.ref_name }}
+                  body_path: RELEASE.md
+                  files: module.zip
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
