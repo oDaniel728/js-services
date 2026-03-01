@@ -17,7 +17,7 @@ export const boolean = /** @type {boolean} */ (false);
 
 export const null_ = /** @type {null} */ (null);
 
-export const any = union([string, number, boolean, null_, Object, Array]);
+export const any = /** @type {import("./ttyping").t_any} */ (null);
 
 export const void_ = /** @type {void} */ (undefined);
 
@@ -62,9 +62,8 @@ export function dict(KeyType, ValueType) {
 }
 
 /**
- * @template T
- * @param {readonly T[]} values
- * @returns {readonly T}
+ * Cria um tipo literal
+ * @type { import("./ttyping").t_literal }
  */
 export function literal(...values) {
     return values[0];
@@ -173,21 +172,25 @@ export function struct(obj) {
 /**
  * Retorna o tipo de um objeto
  *
- * @template {typeof any | Record<string, any>} T
- * @param {T} obj 
- * @returns {T} 
+ * @type { import("./ttyping").t_type }
  */
 export function type(obj) {
     return obj;
 }
 
 /**
- * Validates a type
+ * Cria um objeto a partir de um tipo
  * @type {import("./tservices")._as}
  */
 export function as(Type, obj) {
     return obj
 }
+
+/**
+ * Cria um objeto a partir de um tipo
+ * @type { typeof as }
+ */
+const make = as
 
 /**
  * Faz com que T|null vire T
@@ -205,7 +208,7 @@ export function notnull(object) {
 /**
  * Cria um Optional[T]
  *
- * @template { any } T
+ * @template { unknown } T
  * @param {T} object 
  * @returns {T?} 
  */
@@ -361,7 +364,6 @@ export function createDefault(structure, map) {
 export function generator(value) {
     return () => value;
 }
-
 
 /**
  * Retorna nulo, mas um dia é cls
