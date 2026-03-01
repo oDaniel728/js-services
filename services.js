@@ -287,6 +287,6 @@ const AllServices = {
  * @param {K} service 
  * @returns {(typeof AllServices)[K]}
  */
-export function GetService(service) {
+export function getService(service) {
     return AllServices[service]
 }
