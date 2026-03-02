@@ -213,7 +213,7 @@ export function notnull(object) {
  * @returns {T?} 
  */
 export function optional(object) {
-    return object;
+    return null;
 }
 
 

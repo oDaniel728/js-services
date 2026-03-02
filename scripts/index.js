@@ -12,10 +12,7 @@ const mapaDeCor = typing.as(typing.dict(tCor, tCor), {
 const tSinal = typing.object({
     cor: tCor,
     
-    /**
-     * @param { typeof tCor? } cor 
-     */
-    mudarCor(cor = null) {
+    mudarCor(cor = typing.optional(tCor)) {
         this.cor = cor ?? mapaDeCor[this.cor];
     }
 })
