@@ -11,3 +11,7 @@ export type t_type = <
 export type t_any = any;
 
 export type t_object = <T>(object: T) => T;
+
+export type t_instancetypeof = <T>(
+    constructor: { "new"(...args: any[]): T } & Record<string, any>
+) => T;

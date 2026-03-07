@@ -279,7 +279,6 @@ export function object(object) {
 }
 
 
-
 /**
  * Força o tipo(hint)
  *
@@ -373,5 +372,13 @@ export function generator(value) {
  */
 export function nullbut(cls) {
     // @ts-ignore
+    return null;
+}
+
+/** Retorna o tipo de uma instância (hint)
+ * @type { import("./ttyping").t_instancetypeof }
+ * @since 26.03.07
+ */
+export function instancetypeof(constructor) {
     return null;
 }
